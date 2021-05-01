@@ -231,7 +231,8 @@ sub _expression {
 		}
 	}
 	if ( $_[0]->{forbid_undef} && !defined $cursor ) {
-		$_[0]->{_undefined}{"Undefined value in template path '@path'"} = 1;
+        my $path = join '.' => @path;
+		$_[0]->{_undefined}{"Undefined value in template path '$path'"} = 1;
 		return '';
 	}
 
