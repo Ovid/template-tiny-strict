@@ -269,7 +269,7 @@ __END__
     Hello [% foo %]!
     END_TEMPLATE
 
-    # Fatal: Unused variable
+    # Fatal: Undefined variable
     $template->process( <<'END_TEMPLATE', { foo => undef } );
     Hello [% foo %]!
     END_TEMPLATE
