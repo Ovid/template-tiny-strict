@@ -70,7 +70,14 @@ my $CONDITION = qr/
 /xs;
 
 sub new {
-	bless { @_[1..$#_] }, $_[0];
+	my ( $class, %arg_for ) = @_;
+	bless {
+		TRIM           => $arg_for{TRIM},
+		forbid_undef  => $arg_for{forbid_undef},
+		forbid_unused => $arg_for{forbid_unused},
+		_undefined	  => {},
+		_used         => {},
+	} => $class;
 }
 
 # Copy and modify
@@ -85,6 +92,8 @@ sub process {
 	my $self  = shift;
 	my $copy  = ${shift()};
 	my $stash = shift || {};
+	$self->{_undefined} = {};
+	$self->{_used}      = {};
 
 	local $@  = '';
 	local $^W = 0;
@@ -94,6 +103,26 @@ sub process {
 
 	# Process down the nested tree of conditions
 	my $result = $self->_process( $stash, $copy );
+	if ( $self->{forbid_undef} ) {
+		if ( my %errors = %{ $self->{_undefined} } ) {
+			my $errors = join "\n" => sort keys %errors;
+			require Carp;
+			Carp::croak($errors);
+		}
+	}
+	if ( $self->{forbid_unused} ) {
+		my @unused;
+		foreach my $var ( keys %$stash ) {
+			unless ( $self->{_used}{$var} ) {
+				push @unused => $var;
+			}
+		}
+		if ( my $unused = join ', ' => sort @unused ) {
+			require Carp;
+			Carp::croak("The following variables were passed to the template but unused: '$unused'");
+		}
+	}
+
 	if ( @_ ) {
 		${$_[0]} = $result;
 	} elsif ( defined wantarray ) {
@@ -183,6 +212,7 @@ sub _foreach {
 sub _expression {
 	my $cursor = $_[1];
 	my @path   = split /\./, $_[2];
+	$_[0]->{_used}{ $path[0] } = 1;
 	foreach ( @path ) {
 		# Support for private keys
 		return undef if substr($_, 0, 1) eq '_';
@@ -200,6 +230,11 @@ sub _expression {
 			return '';
 		}
 	}
+	if ( $_[0]->{forbid_undef} && !defined $cursor ) {
+		$_[0]->{_undefined}{"Undefined value in template path '@path'"} = 1;
+		return '';
+	}
+
 	return $cursor;
 }
 
