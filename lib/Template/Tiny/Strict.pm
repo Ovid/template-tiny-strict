@@ -319,7 +319,7 @@ the Perl regular expression engine.
 Only the default C<[% %]> tag style is supported.
 
 Both the C<[%+ +%]> style explicit whitespace and the C<[%- -%]> style
-explicit chomp B<are> support, although the C<[%+ +%]> version is unneeded
+explicit chomp B<are> supported, although the C<[%+ +%]> version is unneeded
 in practice as B<Template::Tiny::Strict> does not support default-enabled C<PRE_CHOMP>
 or C<POST_CHOMP>.
 

@@ -4,7 +4,7 @@ Template::Tiny::Strict - Template Toolkit reimplemented in as little code as pos
 
 # VERSION
 
-version 1.16
+version 1.17
 
 # SYNOPSIS
 
@@ -76,7 +76,7 @@ the Perl regular expression engine.
 Only the default `[% %]` tag style is supported.
 
 Both the `[%+ +%]` style explicit whitespace and the `[%- -%]` style
-explicit chomp **are** support, although the `[%+ +%]` version is unneeded
+explicit chomp **are** supported, although the `[%+ +%]` version is unneeded
 in practice as **Template::Tiny::Strict** does not support default-enabled `PRE_CHOMP`
 or `POST_CHOMP`.
 
