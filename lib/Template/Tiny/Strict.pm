@@ -253,26 +253,26 @@ __END__
 
 =head1 SYNOPSIS
 
-my $template = Template::Tiny::Strict->new(
-    TRIM          => 1,
-    forbid_undef  => $optional_boolean,
-    forbid_unused => $optional_boolean,
-);
-  
-  # Print the template results to STDOUT
-  $template->process( <<'END_TEMPLATE', { foo => 'World' } );
-  Hello [% foo %]!
-  END_TEMPLATE
+    my $template = Template::Tiny::Strict->new(
+        TRIM          => 1,
+        forbid_undef  => $optional_boolean,
+        forbid_unused => $optional_boolean,
+    );
 
-  # Fatal: Unused variable
-  $template->process( <<'END_TEMPLATE', { foo => 'World', bar => 'Hello' } );
-  Hello [% foo %]!
-  END_TEMPLATE
+    # Print the template results to STDOUT
+    $template->process( <<'END_TEMPLATE', { foo => 'World' } );
+    Hello [% foo %]!
+    END_TEMPLATE
 
-  # Fatal: Unused variable
-  $template->process( <<'END_TEMPLATE', { foo => undef } );
-  Hello [% foo %]!
-  END_TEMPLATE
+    # Fatal: Unused variable
+    $template->process( <<'END_TEMPLATE', { foo => 'World', bar => 'Hello' } );
+    Hello [% foo %]!
+    END_TEMPLATE
+
+    # Fatal: Unused variable
+    $template->process( <<'END_TEMPLATE', { foo => undef } );
+    Hello [% foo %]!
+    END_TEMPLATE
 
 =head1 DESCRIPTION
 
@@ -287,14 +287,14 @@ to the constructor:
 If true, I<any> access of an undefined value in the template will cause the code to C<croak>
 with an error such as:
 
-  Undefined value in template path 'items.1'
+    Undefined value in template path 'items.1'
 
 =item * C<forbid_unused>
 
 If true, I<any> variable passed in the stash that is not used will cause the coad to
 C<croak> with an error such as:
-   
-  The following variables were passed to the template but unused: 'name'
+
+    The following variables were passed to the template but unused: 'name'
 
 =back
 
@@ -366,10 +366,10 @@ Additional parameters can be provided without error, but will be ignored.
 
   # DEPRECATED: Return template results (emits a warning)
   my $text = $template->process( \$input, $vars );
-  
+
   # Print template results to STDOUT
   $template->process( \$input, $vars );
-  
+
   # Generate template results into a variable
   my $output = '';
   $template->process( \$input, $vars, \$output );
