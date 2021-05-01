@@ -1,25 +1,24 @@
 #!/usr/bin/perl
 
 use strict;
+
 BEGIN {
-	$|  = 1;
-	$^W = 1;
+    $|  = 1;
+    $^W = 1;
 }
 use Test::More tests => 6;
 use Template::Tiny::Strict ();
 
 sub preprocess {
-	my $template = $_[0];
-	my $expected = $_[1];
-	my $message  = $_[2] || 'Template preprocessd ok';
-	my $prepared = Template::Tiny::Strict->new->preprocess( $template );
-	is( $prepared, $expected, $message );
-	is( $template, $_[0], '->proprocess does not modify original template variable' );
+    my $template = $_[0];
+    my $expected = $_[1];
+    my $message  = $_[2] || 'Template preprocessd ok';
+    my $prepared = Template::Tiny::Strict->new->preprocess($template);
+    is( $prepared, $expected, $message );
+    is( $template, $_[0],
+        '->proprocess does not modify original template variable'
+    );
 }
-
-
-
-
 
 ######################################################################
 # Main Tests

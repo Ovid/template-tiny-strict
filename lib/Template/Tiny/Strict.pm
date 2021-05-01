@@ -1,12 +1,12 @@
 package Template::Tiny::Strict;
-# ABSTRACT: Template Toolkit reimplemented in as little code as possible
 
+# ABSTRACT: Template Toolkit reimplemented in as little code as possible
 
 # Load overhead: 40k
 
 use strict;
 
-our $VERSION = '1.14';
+our $VERSION = '1.15';
 
 # Evaluatable expression
 my $EXPR = qr/ [a-z_][\w.]* /xs;
@@ -21,7 +21,7 @@ my $LEFT = qr/
 /xs;
 
 # Closing %] tag including whitespace chomping rules
-my $RIGHT  = qr/
+my $RIGHT = qr/
 	\s* (?:
 		\+? \%\]
 		|
@@ -70,73 +70,75 @@ my $CONDITION = qr/
 /xs;
 
 sub new {
-	my ( $class, %arg_for ) = @_;
-	bless {
-		TRIM           => $arg_for{TRIM},
-		forbid_undef  => $arg_for{forbid_undef},
-		forbid_unused => $arg_for{forbid_unused},
-		_undefined	  => {},
-		_used         => {},
-	} => $class;
+    my ( $class, %arg_for ) = @_;
+    bless {
+        TRIM          => $arg_for{TRIM},
+        forbid_undef  => $arg_for{forbid_undef},
+        forbid_unused => $arg_for{forbid_unused},
+        _undefined    => {},
+        _used         => {},
+    } => $class;
 }
 
 # Copy and modify
 sub preprocess {
-	my $self = shift;
-	my $text = shift;
-	$self->_preprocess(\$text);
-	return $text;
+    my $self = shift;
+    my $text = shift;
+    $self->_preprocess( \$text );
+    return $text;
 }
 
 sub process {
-	my $self  = shift;
-	my $copy  = ${shift()};
-	my $stash = shift || {};
-	$self->{_undefined} = {};
-	$self->{_used}      = {};
+    my $self  = shift;
+    my $copy  = ${ shift() };
+    my $stash = shift || {};
+    $self->{_undefined} = {};
+    $self->{_used}      = {};
 
-	local $@  = '';
-	local $^W = 0;
+    local $@  = '';
+    local $^W = 0;
 
-	# Preprocess to establish unique matching tag sets
-	$self->_preprocess( \$copy );
+    # Preprocess to establish unique matching tag sets
+    $self->_preprocess( \$copy );
 
-	# Process down the nested tree of conditions
-	my $result = $self->_process( $stash, $copy );
-	if ( $self->{forbid_undef} ) {
-		if ( my %errors = %{ $self->{_undefined} } ) {
-			my $errors = join "\n" => sort keys %errors;
-			require Carp;
-			Carp::croak($errors);
-		}
-	}
-	if ( $self->{forbid_unused} ) {
-		my @unused;
-		foreach my $var ( keys %$stash ) {
-			unless ( $self->{_used}{$var} ) {
-				push @unused => $var;
-			}
-		}
-		if ( my $unused = join ', ' => sort @unused ) {
-			require Carp;
-			Carp::croak("The following variables were passed to the template but unused: '$unused'");
-		}
-	}
+    # Process down the nested tree of conditions
+    my $result = $self->_process( $stash, $copy );
+    if ( $self->{forbid_undef} ) {
+        if ( my %errors = %{ $self->{_undefined} } ) {
+            my $errors = join "\n" => sort keys %errors;
+            require Carp;
+            Carp::croak($errors);
+        }
+    }
+    if ( $self->{forbid_unused} ) {
+        my @unused;
+        foreach my $var ( keys %$stash ) {
+            unless ( $self->{_used}{$var} ) {
+                push @unused => $var;
+            }
+        }
+        if ( my $unused = join ', ' => sort @unused ) {
+            require Carp;
+            Carp::croak(
+                "The following variables were passed to the template but unused: '$unused'"
+            );
+        }
+    }
 
-	if ( @_ ) {
-		${$_[0]} = $result;
-	} elsif ( defined wantarray ) {
-		require Carp;
-		Carp::carp('Returning of template results is deprecated in Template::Tiny::Strict 0.11');
-		return $result;
-	} else {
-		print $result;
-	}
+    if (@_) {
+        ${ $_[0] } = $result;
+    }
+    elsif ( defined wantarray ) {
+        require Carp;
+        Carp::carp(
+            'Returning of template results is deprecated in Template::Tiny::Strict 0.11'
+        );
+        return $result;
+    }
+    else {
+        print $result;
+    }
 }
-
-
-
-
 
 ######################################################################
 # Support Methods
@@ -144,12 +146,12 @@ sub process {
 # The only reason this is a standalone is so we can
 # do more in-depth testing.
 sub _preprocess {
-	my $self = shift;
-	my $copy = shift;
+    my $self = shift;
+    my $copy = shift;
 
-	# Preprocess to establish unique matching tag sets
-	my $id = 0;
-	1 while $$copy =~ s/
+    # Preprocess to establish unique matching tag sets
+    my $id = 0;
+    1 while $$copy =~ s/
 		$PREPARSE
 	/
 		my $tag = substr($1, 0, 1) . ++$id;
@@ -159,9 +161,9 @@ sub _preprocess {
 }
 
 sub _process {
-	my ($self, $stash, $text) = @_;
+    my ( $self, $stash, $text ) = @_;
 
-	$text =~ s/
+    $text =~ s/
 		$CONDITION
 	/
 		($2 eq 'F')
@@ -176,8 +178,8 @@ sub _process {
 				: $self->_process($stash, $6)
 	/gsex;
 
-	# Resolve expressions
-	$text =~ s/
+    # Resolve expressions
+    $text =~ s/
 		$LEFT ( $EXPR ) $RIGHT
 	/
 		eval {
@@ -186,57 +188,60 @@ sub _process {
 		}
 	/gsex;
 
-	# Trim the document
-	$text =~ s/^\s*(.+?)\s*\z/$1/s if $self->{TRIM};
+    # Trim the document
+    $text =~ s/^\s*(.+?)\s*\z/$1/s if $self->{TRIM};
 
-	return $text;
+    return $text;
 }
 
 # Special handling for foreach
 sub _foreach {
-	my ($self, $stash, $term, $expr, $text) = @_;
+    my ( $self, $stash, $term, $expr, $text ) = @_;
 
-	# Resolve the expression
-	my $list = $self->_expression($stash, $expr);
-	unless ( ref $list eq 'ARRAY' ) {
-		return '';
-	}
+    # Resolve the expression
+    my $list = $self->_expression( $stash, $expr );
+    unless ( ref $list eq 'ARRAY' ) {
+        return '';
+    }
 
-	# Iterate
-	return join '', map {
-		$self->_process( { %$stash, $term => $_ }, $text )
-	} @$list;
+    # Iterate
+    return join '',
+      map { $self->_process( { %$stash, $term => $_ }, $text ) } @$list;
 }
 
 # Evaluates a stash expression
 sub _expression {
-	my $cursor = $_[1];
-	my @path   = split /\./, $_[2];
-	$_[0]->{_used}{ $path[0] } = 1;
-	foreach ( @path ) {
-		# Support for private keys
-		return undef if substr($_, 0, 1) eq '_';
+    my $cursor = $_[1];
+    my @path   = split /\./, $_[2];
+    $_[0]->{_used}{ $path[0] } = 1;
+    foreach (@path) {
 
-		# Split by data type
-		my $type = ref $cursor;
-		if ( $type eq 'ARRAY' ) {
-			return '' unless /^(?:0|[0-9]\d*)\z/;
-			$cursor = $cursor->[$_];
-		} elsif ( $type eq 'HASH' ) {
-			$cursor = $cursor->{$_};
-		} elsif ( $type ) {
-			$cursor = $cursor->$_();
-		} else {
-			return '';
-		}
-	}
-	if ( $_[0]->{forbid_undef} && !defined $cursor ) {
+        # Support for private keys
+        return undef if substr( $_, 0, 1 ) eq '_';
+
+        # Split by data type
+        my $type = ref $cursor;
+        if ( $type eq 'ARRAY' ) {
+            return '' unless /^(?:0|[0-9]\d*)\z/;
+            $cursor = $cursor->[$_];
+        }
+        elsif ( $type eq 'HASH' ) {
+            $cursor = $cursor->{$_};
+        }
+        elsif ($type) {
+            $cursor = $cursor->$_();
+        }
+        else {
+            return '';
+        }
+    }
+    if ( $_[0]->{forbid_undef} && !defined $cursor ) {
         my $path = join '.' => @path;
-		$_[0]->{_undefined}{"Undefined value in template path '$path'"} = 1;
-		return '';
-	}
+        $_[0]->{_undefined}{"Undefined value in template path '$path'"} = 1;
+        return '';
+    }
 
-	return $cursor;
+    return $cursor;
 }
 
 1;
