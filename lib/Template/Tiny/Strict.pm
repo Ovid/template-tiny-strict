@@ -253,19 +253,54 @@ __END__
 
 =head1 SYNOPSIS
 
-  my $template = Template::Tiny::Strict->new(
-      TRIM => 1,
-  );
+my $template = Template::Tiny::Strict->new(
+    TRIM          => 1,
+    forbid_undef  => $optional_boolean,
+    forbid_unused => $optional_boolean,
+);
   
   # Print the template results to STDOUT
   $template->process( <<'END_TEMPLATE', { foo => 'World' } );
   Hello [% foo %]!
   END_TEMPLATE
 
+  # Fatal: Unused variable
+  $template->process( <<'END_TEMPLATE', { foo => 'World', bar => 'Hello' } );
+  Hello [% foo %]!
+  END_TEMPLATE
+
+  # Fatal: Unused variable
+  $template->process( <<'END_TEMPLATE', { foo => undef } );
+  Hello [% foo %]!
+  END_TEMPLATE
+
 =head1 DESCRIPTION
 
-B<Template::Tiny::Strict> is a reimplementation of a subset of the functionality from
-L<Template> Toolkit in as few lines of code as possible.
+B<Template::Tiny::Strict> is a drop-in replacement for L<Template::Tiny>. By default,
+the behavior is identical. However, we have two new I<optional> arguments you can pass
+to the constructor:
+
+=over 4
+
+=item * C<forbid_undef>
+
+If true, I<any> access of an undefined value in the template will cause the code to C<croak>
+with an error such as:
+
+  Undefined value in template path 'items.1'
+
+=item * C<forbid_unused>
+
+If true, I<any> variable passed in the stash that is not used will cause the coad to
+C<croak> with an error such as:
+   
+  The following variables were passed to the template but unused: 'name'
+
+=back
+
+As a convenience, all errors are gathered and reported at once.
+
+B<Note>: what follows is the remainder of the original POD.
 
 It is intended for use in light-usage, low-memory, or low-cpu templating
 situations, where you may need to upgrade to the full feature set in the
