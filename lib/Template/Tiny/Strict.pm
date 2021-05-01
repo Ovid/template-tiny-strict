@@ -103,11 +103,10 @@ sub process {
 
     # Process down the nested tree of conditions
     my $result = $self->_process( $stash, $copy );
+    my $errors = '';
     if ( $self->{forbid_undef} ) {
         if ( my %errors = %{ $self->{_undefined} } ) {
-            my $errors = join "\n" => sort keys %errors;
-            require Carp;
-            Carp::croak($errors);
+            $errors = join "\n" => sort keys %errors;
         }
     }
     if ( $self->{forbid_unused} ) {
@@ -118,11 +117,13 @@ sub process {
             }
         }
         if ( my $unused = join ', ' => sort @unused ) {
-            require Carp;
-            Carp::croak(
-                "The following variables were passed to the template but unused: '$unused'"
-            );
+            $errors
+              .= "\nThe following variables were passed to the template but unused: '$unused'";
         }
+    }
+    if ($errors) {
+        require Carp;
+        Carp::croak($errors);
     }
 
     if (@_) {

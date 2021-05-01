@@ -61,4 +61,9 @@ check_fail { foo => 'World', bar => undef, baz => 1 },
 Hello [% foo %]!
 END
 
+check_fail { foo => undef, bar => 1 },
+  <<'END', "Undefined value in template path 'foo'\nThe following variables were passed to the template but unused: 'bar'", 'All errors should be reported at once';
+Hello [% foo %]!
+END
+
 done_testing;
