@@ -4,7 +4,7 @@ Template::Tiny::Strict - Template Toolkit reimplemented in as little code as pos
 
 # VERSION
 
-version 1.15
+version 1.16
 
 # SYNOPSIS
 
@@ -25,7 +25,7 @@ $template->process( <<'END_TEMPLATE', { foo => 'World', bar => 'Hello' } );
 Hello [% foo %]!
 END_TEMPLATE
 
-# Fatal: Unused variable
+# Fatal: Undefined variable
 $template->process( <<'END_TEMPLATE', { foo => undef } );
 Hello [% foo %]!
 END_TEMPLATE
