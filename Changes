@@ -1,8 +1,13 @@
-Changes for Perl extension Template-Tiny
+Changes for Perl extension Template-Tiny-Strict
 
 {{$NEXT}}
+          - Fix minor POD error.
+          - Interim release to handle missing Changes in last release
 
 1.15      2021-05-01 09:02:02 CEST
+          - Forked from Template::Tiny to Template::Tiny::Strict
+          - Added forbid_undef and forbid_unused arguments
+          - Retroactively update these Changes
 
 1.13      2021-01-30 17:28:27Z
           - distribution tooling updates
