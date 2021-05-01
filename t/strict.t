@@ -7,12 +7,12 @@ BEGIN {
     $^W = 1;
 }
 use Test::More;
-use Template::Tiny;
+use Template::Tiny::Strict;
 
 sub process ($$$$) {
     my ( $stash, $template, $expected, $message ) = @_;
     my $output = '';
-    Template::Tiny->new( forbid_undef => 1, forbid_unused => 1 )
+    Template::Tiny::Strict->new( forbid_undef => 1, forbid_unused => 1 )
       ->process( \$template, $stash, \$output );
     local $Test::Builder::Level = $Test::Builder::Level + 1;
     is( $output, $expected, $message );
@@ -22,7 +22,7 @@ sub check_fail ($$$$) {
     my ( $stash, $template, $expected_error, $message ) = @_;
     my $output;
     eval {
-        Template::Tiny->new( forbid_undef => 1, forbid_unused => 1 )
+        Template::Tiny::Strict->new( forbid_undef => 1, forbid_unused => 1 )
           ->process( \$template, $stash, \$output );
     };
     local $Test::Builder::Level = $Test::Builder::Level + 1;

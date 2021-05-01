@@ -6,7 +6,7 @@ Installing Template-Tiny is straightforward.
 
 If you have cpanm, you only need one line:
 
-    % cpanm Template::Tiny
+    % cpanm Template::Tiny::Strict
 
 If it does not have permission to install modules to the current perl, cpanm
 will automatically set up and install to a local::lib in your home directory.
@@ -17,7 +17,7 @@ details on enabling it in your environment.
 
 Alternatively, if your CPAN shell is set up, you should just be able to do:
 
-    % cpan Template::Tiny
+    % cpan Template::Tiny::Strict
 
 ## Manual installation
 
@@ -66,7 +66,7 @@ They can all be found in the "PHASE_requires" key of MYMETA.yml or the
 Template-Tiny documentation is available as POD.
 You can run `perldoc` from a shell to read the documentation:
 
-    % perldoc Template::Tiny
+    % perldoc Template::Tiny::Strict
 
 For more information on installing Perl modules via CPAN, please see:
 https://www.cpan.org/modules/INSTALL.html

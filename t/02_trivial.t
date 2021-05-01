@@ -6,7 +6,7 @@ BEGIN {
 	$^W = 1;
 }
 use Test::More tests => 1;
-use Template::Tiny ();
+use Template::Tiny::Strict ();
 
 sub process {
 	my $stash    = shift;
@@ -14,7 +14,7 @@ sub process {
 	my $expected = shift;
 	my $message  = shift || 'Template processed ok';
 	my $output   = '';
-	Template::Tiny->new->process( \$input, $stash, \$output );
+	Template::Tiny::Strict->new->process( \$input, $stash, \$output );
 	is( $output, $expected, $message );
 }
 

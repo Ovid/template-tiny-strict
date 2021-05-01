@@ -8,7 +8,7 @@ BEGIN {
 use vars qw{$VAR1 $VAR2};
 use Test::More;
 use File::Spec::Functions ':ALL';
-use Template::Tiny ();
+use Template::Tiny::Strict ();
 
 my $SAMPLES = catdir( 't', 'samples' );
 unless ( -d $SAMPLES ) {
@@ -58,8 +58,8 @@ foreach my $template ( @TEMPLATES ) {
 		INCLUDE_PATH => $SAMPLES,
 	);
 	%params = ( %params, %$VAR2 ) if $VAR2;
-	my $template = Template::Tiny->new(%params);
-	isa_ok( $template, 'Template::Tiny' );
+	my $template = Template::Tiny::Strict->new(%params);
+	isa_ok( $template, 'Template::Tiny::Strict' );
 
 	# Execute the template
 	$template->process( \$tt, $VAR1, \my $out );

@@ -1,4 +1,4 @@
-package Template::Tiny;
+package Template::Tiny::Strict;
 # ABSTRACT: Template Toolkit reimplemented in as little code as possible
 
 
@@ -127,7 +127,7 @@ sub process {
 		${$_[0]} = $result;
 	} elsif ( defined wantarray ) {
 		require Carp;
-		Carp::carp('Returning of template results is deprecated in Template::Tiny 0.11');
+		Carp::carp('Returning of template results is deprecated in Template::Tiny::Strict 0.11');
 		return $result;
 	} else {
 		print $result;
@@ -247,7 +247,7 @@ __END__
 
 =head1 SYNOPSIS
 
-  my $template = Template::Tiny->new(
+  my $template = Template::Tiny::Strict->new(
       TRIM => 1,
   );
   
@@ -258,7 +258,7 @@ __END__
 
 =head1 DESCRIPTION
 
-B<Template::Tiny> is a reimplementation of a subset of the functionality from
+B<Template::Tiny::Strict> is a reimplementation of a subset of the functionality from
 L<Template> Toolkit in as few lines of code as possible.
 
 It is intended for use in light-usage, low-memory, or low-cpu templating
@@ -266,10 +266,10 @@ situations, where you may need to upgrade to the full feature set in the
 future, or if you want the retain the familiarity of TT-style templates.
 
 For the subset of functionality it implements, it has fully-compatible template
-and stash API. All templates used with B<Template::Tiny> should be able to be
+and stash API. All templates used with B<Template::Tiny::Strict> should be able to be
 transparently upgraded to full Template Toolkit.
 
-Unlike Template Toolkit, B<Template::Tiny> will process templates without a
+Unlike Template Toolkit, B<Template::Tiny::Strict> will process templates without a
 compile phase (but despite this is still quicker, owing to heavy use of
 the Perl regular expression engine.
 
@@ -279,7 +279,7 @@ Only the default C<[% %]> tag style is supported.
 
 Both the C<[%+ +%]> style explicit whitespace and the C<[%- -%]> style
 explicit chomp B<are> support, although the C<[%+ +%]> version is unneeded
-in practice as B<Template::Tiny> does not support default-enabled C<PRE_CHOMP>
+in practice as B<Template::Tiny::Strict> does not support default-enabled C<PRE_CHOMP>
 or C<POST_CHOMP>.
 
 Variable expressions in the form C<[% foo.bar.baz %]> B<are> supported.
@@ -294,7 +294,7 @@ simple C<[% foo.bar.baz %]> conditions.
 Support for looping (or rather iteration) is available in simple
 C<[% FOREACH item IN list %]> form B<is> supported. Other loop structures are
 B<not> supported. Because support for arbitrary or infinite looping is not
-available, B<Template::Tiny> templates are not turing complete. This is
+available, B<Template::Tiny::Strict> templates are not turing complete. This is
 intentional.
 
 All of the four supported control structures C<IF>/C<ELSE>/C<UNLESS>/C<FOREACH>
@@ -310,7 +310,7 @@ Anything beyond the above is currently out of scope.
 
 =head2 new
 
-  my $template = Template::Tiny->new(
+  my $template = Template::Tiny::Strict->new(
       TRIM => 1,
   );
 
