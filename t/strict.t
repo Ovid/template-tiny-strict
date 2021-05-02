@@ -22,8 +22,10 @@ sub check_fail ($$$$) {
     my ( $stash, $template, $expected_error, $message ) = @_;
     my $output;
     eval {
-        Template::Tiny::Strict->new( forbid_undef => 1, forbid_unused => 1 )
-          ->process( \$template, $stash, \$output );
+        Template::Tiny::Strict->new(
+            forbid_undef => 1, forbid_unused => 1,
+            name         => 'my template'
+        )->process( \$template, $stash, \$output );
     };
     local $Test::Builder::Level = $Test::Builder::Level + 1;
     my $error = $@;
@@ -61,8 +63,14 @@ check_fail { foo => 'World', bar => undef, baz => 1 },
 Hello [% foo %]!
 END
 
+chomp( my $expected = <<'END');
+Template::Tiny::Strict processing for 'my template' failed:
+Undefined value in template path 'foo'
+The following variables were passed to the template but unused: 'bar'
+END
+
 check_fail { foo => undef, bar => 1 },
-  <<'END', "Undefined value in template path 'foo'\nThe following variables were passed to the template but unused: 'bar'", 'All errors should be reported at once';
+  <<'END', $expected, 'All errors should be reported at once, including the name of the temoplate';
 Hello [% foo %]!
 END
 

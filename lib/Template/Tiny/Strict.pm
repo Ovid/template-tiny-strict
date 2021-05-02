@@ -71,14 +71,17 @@ my $CONDITION = qr/
 
 sub new {
     my ( $class, %arg_for ) = @_;
-    bless {
+    return bless {
         TRIM          => $arg_for{TRIM},
         forbid_undef  => $arg_for{forbid_undef},
         forbid_unused => $arg_for{forbid_unused},
+        name          => ( $arg_for{name} // 'template' ),
         _undefined    => {},
         _used         => {},
     } => $class;
 }
+
+sub name { $_[0]->{name} }
 
 # Copy and modify
 sub preprocess {
@@ -123,6 +126,9 @@ sub process {
     }
     if ($errors) {
         require Carp;
+        my $name = $self->name;
+        my $class = ref $self;
+        $errors = "$class processing for '$name' failed:\n$errors";
         Carp::croak($errors);
     }
 
@@ -257,6 +263,7 @@ __END__
         TRIM          => 1,
         forbid_undef  => $optional_boolean,
         forbid_unused => $optional_boolean,
+        name          => $optional_string,
     );
 
     # Print the template results to STDOUT
@@ -277,7 +284,7 @@ __END__
 =head1 DESCRIPTION
 
 B<Template::Tiny::Strict> is a drop-in replacement for L<Template::Tiny>. By default,
-the behavior is identical. However, we have two new I<optional> arguments you can pass
+the behavior is identical. However, we have new I<optional> arguments you can pass
 to the constructor:
 
 =over 4
@@ -296,9 +303,15 @@ C<croak> with an error such as:
 
     The following variables were passed to the template but unused: 'name'
 
+=item * C<name>
+
+Accepts a string as the "name" of the template. Errors will be reported with
+this name. Make it easier to track down the errant template if you are
+generating plenty of them.
+
 =back
 
-As a convenience, all errors are gathered and reported at once.
+All errors are gathered and reported at once.
 
 B<Note>: what follows is the remainder of the original POD.
 
