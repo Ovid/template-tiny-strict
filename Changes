@@ -1,6 +1,8 @@
 Changes for Perl extension Template-Tiny-Strict
 
 {{$NEXT}}
+
+1.17      2021-05-02 15:23:14 CEST
           - Merged typo fix in Changes. Thanks to Karen Etheridge for the PR.
             https://github.com/Ovid/template-tiny-strict/pull/1
           - You can optionally "name" a template. The name will be reported
