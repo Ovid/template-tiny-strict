@@ -15,7 +15,7 @@ Changes for Perl extension Template-Tiny-Strict
           - distribution tooling updates
 
 1.12      2011-06-17
-          - Template::Tiny::Strict is unchanged for a year, moving to stable release
+          - Template::Tiny is unchanged for a year, moving to stable release
           - Cleaning up POD grammar a bit (ADAMK)
           - Removing test dependency on Capture::Tiny for tiny purity (ADAMK)
 
