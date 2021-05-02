@@ -13,6 +13,7 @@ my $template = Template::Tiny::Strict->new(
     TRIM          => 1,
     forbid_undef  => $optional_boolean,
     forbid_unused => $optional_boolean,
+    name          => $optional_string,
 );
 
 # Print the template results to STDOUT
@@ -34,7 +35,7 @@ END_TEMPLATE
 # DESCRIPTION
 
 **Template::Tiny::Strict** is a drop-in replacement for [Template::Tiny](https://metacpan.org/pod/Template::Tiny). By default,
-the behavior is identical. However, we have two new _optional_ arguments you can pass
+the behavior is identical. However, we have new _optional_ arguments you can pass
 to the constructor:
 
 - `forbid_undef`
@@ -55,7 +56,13 @@ to the constructor:
     The following variables were passed to the template but unused: 'name'
     ```
 
-As a convenience, all errors are gathered and reported at once.
+- `name`
+
+    Accepts a string as the "name" of the template. Errors will be reported with
+    this name. Make it easier to track down the errant template if you are
+    generating plenty of them.
+
+All errors are gathered and reported at once.
 
 **Note**: what follows is the remainder of the original POD.
 
