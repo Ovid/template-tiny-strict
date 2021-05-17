@@ -75,7 +75,7 @@ sub new {
         TRIM          => $arg_for{TRIM},
         forbid_undef  => $arg_for{forbid_undef},
         forbid_unused => $arg_for{forbid_unused},
-        name          => ( $arg_for{name} // 'template' ),
+        name          => ( $arg_for{name} || 'template' ),
         _undefined    => {},
         _used         => {},
     } => $class;
@@ -98,7 +98,6 @@ sub process {
     $self->{_undefined} = {};
     $self->{_used}      = {};
 
-    local $@  = '';
     local $^W = 0;
 
     # Preprocess to establish unique matching tag sets

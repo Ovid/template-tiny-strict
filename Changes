@@ -1,6 +1,9 @@
 Changes for Perl extension Template-Tiny-Strict
 
 {{$NEXT}}
+          - Get tests passing for Perl versions < 5.14.
+          - Make sure code works for 5.8.0 (probably works for older Perls,
+            too)
 
 1.17      2021-05-02 15:23:14 CEST
           - Merged typo fix in Changes. Thanks to Karen Etheridge for the PR.
