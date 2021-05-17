@@ -4,7 +4,7 @@ Template::Tiny::Strict - Template Toolkit reimplemented in as little code as pos
 
 # VERSION
 
-version 1.17
+version 1.18
 
 # SYNOPSIS
 
